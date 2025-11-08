@@ -16,6 +16,15 @@ const GarbageBinSchema = new mongoose.Schema({
     required: true,
     default: 'Default Location',
   },
+  // Coordinates for mapping
+  lat: {
+    type: Number,
+    required: false,
+  },
+  lng: {
+    type: Number,
+    required: false,
+  },
   fillLevel: {
     type: Number,
     required: true,
@@ -25,10 +34,53 @@ const GarbageBinSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Empty', 'Filling', 'Full', 'Error'],
+    enum: ['Empty', 'Filling', 'Maintenance', 'Full', 'Error'],
     default: 'Empty',
   },
+  // Threshold for triggering collection (default 60%)
+  threshold: {
+    type: Number,
+    min: 0,
+    max: 100,
+    default: 60,
+  },
+  // Maintenance flag
+  maintenanceFlag: {
+    type: Boolean,
+    default: false,
+  },
+  // Label/Description
+  label: {
+    type: String,
+    trim: true,
+  },
+  // Statistics
+  stats: {
+    totalCollections: {
+      type: Number,
+      default: 0,
+    },
+    averageFillRate: {
+      type: Number,
+      default: 0,
+    },
+    lastCollectionDate: {
+      type: Date,
+    },
+    totalReviews: {
+      type: Number,
+      default: 0,
+    },
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+  },
   lastUpdated: {
+    type: Date,
+    default: Date.now,
+  },
+  createdAt: {
     type: Date,
     default: Date.now,
   },
@@ -40,15 +92,20 @@ const GarbageBinSchema = new mongoose.Schema({
  * @returns {String} Status string
  */
 GarbageBinSchema.statics.determineStatus = function(level) {
-  if (level >= 0 && level <= 60) {
+  if (level < 5) {
     return 'Empty';
-  } else if (level >= 61 && level <= 80) {
+  } else if (level >= 5 && level < 60) {
     return 'Filling';
-  } else if (level >= 81 && level <= 100) {
+  } else if (level >= 60 && level <= 90) {
+    return 'Maintenance';
+  } else if (level > 90) {
     return 'Full';
   } else {
     return 'Error';
   }
 };
+
+// Index for geospatial queries
+GarbageBinSchema.index({ lat: 1, lng: 1 });
 
 module.exports = mongoose.model('GarbageBin', GarbageBinSchema);

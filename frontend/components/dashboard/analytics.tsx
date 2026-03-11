@@ -32,7 +32,7 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 
 export function Analytics() {
-  const [trendDays, setTrendDays] = useState(7)
+  const [trendDays, setTrendDays] = useState(30)
 
   const { data: analyticsResponse, isLoading } = useQuery({
     queryKey: ['analytics', 'summary'],

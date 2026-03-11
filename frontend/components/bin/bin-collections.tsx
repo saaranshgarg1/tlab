@@ -16,6 +16,9 @@ export function BinCollections({ binId }: BinCollectionsProps) {
   const { data: collectionsResponse, isLoading } = useQuery({
     queryKey: ['collections', binId],
     queryFn: () => apiClient.getCollections(binId),
+    enabled: !!binId,
+    refetchInterval: 1000, // poll every 10s
+    refetchIntervalInBackground: true,
   })
 
   const collections = collectionsResponse?.data || []

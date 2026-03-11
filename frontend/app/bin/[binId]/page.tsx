@@ -24,6 +24,7 @@ function BinPageContent({ binId }: { binId: string }) {
   const { data: statsResponse, isLoading } = useQuery({
     queryKey: ['bin-stats', binId],
     queryFn: () => apiClient.getBinStats(binId),
+    refetchInterval: 100,
   })
 
   const stats = statsResponse?.data

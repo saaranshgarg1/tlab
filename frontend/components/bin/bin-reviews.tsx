@@ -11,6 +11,7 @@ import { Star, MessageSquare, User, Calendar, Plus } from 'lucide-react'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import type { ReviewForm } from '@/lib/types'
+import { AIReviewSummary } from './ai-review-summary'
 
 interface BinReviewsProps {
   binId: string
@@ -90,6 +91,11 @@ export function BinReviews({ binId }: BinReviewsProps) {
 
   return (
     <div className="space-y-4">
+      {/* AI Review Summary */}
+      {reviews.length > 0 && (
+        <AIReviewSummary binId={binId} reviews={reviews} />
+      )}
+
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">

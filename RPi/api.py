@@ -7,23 +7,13 @@ to the backend via HTTP REST API.
 import requests
 import time
 import random
+import os
 
 # ==================== CONFIGURATION ====================
-BACKEND_URL = "http://localhost:5000/api/bins/update"
+BACKEND_URL = f"https://backend-545776890937.asia-southeast1.run.app/api/bins/update"
 BIN_ID = "RASPI-BIN-007"
-UPDATE_INTERVAL = 15  # seconds
+UPDATE_INTERVAL = 5  # seconds
 # =======================================================
-
-
-def get_simulated_fill_level():
-    """
-    Simulate an ultrasonic sensor reading.
-    Returns a random fill level between 0 and 100.
-    
-    Returns:
-        int: Simulated fill level percentage (0-100)
-    """
-    return random.randint(0, 100)
 
 
 def send_data_to_backend(level):
@@ -73,40 +63,3 @@ def send_data_to_backend(level):
     except Exception as e:
         print(f"✗ Unexpected error: {e}")
         return False
-
-
-def main():
-    """
-    Main function that runs the monitoring loop.
-    Continuously reads sensor data and sends it to the backend.
-    """
-    print("=" * 60)
-    print("Smart Garbage Monitoring System - Client Started")
-    print("=" * 60)
-    print(f"Bin ID: {BIN_ID}")
-    print(f"Backend URL: {BACKEND_URL}")
-    print(f"Update Interval: {UPDATE_INTERVAL} seconds")
-    print("Press Ctrl+C to stop...")
-    print("=" * 60)
-    print()
-    
-    try:
-        while True:
-            # Get simulated sensor reading
-            fill_level = get_simulated_fill_level()
-            
-            # Send data to backend
-            send_data_to_backend(fill_level)
-            
-            # Wait before next reading
-            print(f"Waiting {UPDATE_INTERVAL} seconds until next reading...\n")
-            time.sleep(UPDATE_INTERVAL)
-            
-    except KeyboardInterrupt:
-        print("\n" + "=" * 60)
-        print("Client stopped by user (Ctrl+C)")
-        print("=" * 60)
-
-
-if __name__ == "__main__":
-    main()
